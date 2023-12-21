@@ -2,31 +2,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 import astropy.units as u
 from mpdaf.obj import Cube, WCS, WaveCoord
-#WCS for spatial coordinates and WaveCoord for spectral coordinates
-
-obj1 = Cube('DATA/ADP.2017-03-23T15_47_52.027.fits')
-obj1.info()
-
 from mpdaf.obj import iter_spe
 from tqdm import tqdm
 
 def continuum_extraction(cube,cont_cube):
     for sp, co in tqdm(zip(iter_spe(cube), iter_spe(cont_cube))):        
         co[:] = sp.poly_spec(5)
+    return cube, cont_cube
 
-#duplicate obj1
+datapath='/home/spectram/projects/cartwheel/muse/'
+full_cube = Cube(datapath+'ADP.2017-03-23T15:47:52.027.fits')
 
-small = obj1[:,0:10,0:10] #specify dimensions as needed
-small.info()
+# small_cube = full_cube[:,60:70,60:70] #specify dimensions as needed
 
-cont_cube = small.clone(data_init=np.empty, var_init=np.zeros)
-cont_cube.info()
+_, full_cont= continuum_extraction(full_cube, \
+    full_cube.clone(data_init=np.empty, var_init=np.zeros))
 
-
-continuum_extraction(small,cont_cube)
-
-#subtracting continuum
-line1 = small - cont1
-plt.figure()
-line.sum(axis=0).plot(scale='arcsinh',colobar='v')
-line.sum(axis=(1,2)).plot()
+full_line=full_cube-full_cont
+full_line.write(datapath+'cw-line.fits')
+full_cont.write(datapath+'cw-cont.fits')
