@@ -24,3 +24,9 @@ cont_cube.info()
 
 
 continuum_extraction(small,cont_cube)
+
+#subtracting continuum
+line1 = small - cont1
+plt.figure()
+line.sum(axis=0).plot(scale='arcsinh',colobar='v')
+line.sum(axis=(1,2)).plot()
