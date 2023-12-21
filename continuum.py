@@ -12,7 +12,7 @@ from tqdm import tqdm
 
 def continuum_extraction(cube,cont_cube):
     for sp, co in tqdm(zip(iter_spe(cube), iter_spe(cont_cube))):        
-        co[:] = sp.poly_spec(1)
+        co[:] = sp.poly_spec(5)
 
 #duplicate obj1
 
